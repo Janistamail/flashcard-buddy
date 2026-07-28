@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find / -maxdepth 6 -iname \"*grilling*\")",
+      "Bash(find / -maxdepth 6 -iname \"*domain-modeling*\")",
+      "Read(//Users/janista/**)",
+      "Bash(find / -iname \"*grilling*\")",
+      "Bash(find / -iname \"*domain-modeling*\")",
+      "Bash(rm -f /Users/janista/Desktop/secret_project/flashcard-buddy/app/api/vocab/lookup/route.ts)",
+      "Bash(rmdir /Users/janista/Desktop/secret_project/flashcard-buddy/app/api/vocab/lookup)",
+      "Bash(rm -f /Users/janista/Desktop/secret_project/flashcard-buddy/app/components/Modal.tsx)",
+      "Bash(rm -f /Users/janista/Desktop/secret_project/flashcard-buddy/app/components/Lever.tsx)",
+      "Bash(rmdir /Users/janista/Desktop/secret_project/flashcard-buddy/app/components)"
+    ]
+  }
+}
