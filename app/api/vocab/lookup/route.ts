@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isWordLookupResult } from "@/app/lib/vocab";
+import { isSentenceLookupResult, isWordLookupResult } from "@/app/lib/vocab";
 
 export const runtime = "nodejs";
 
@@ -17,6 +17,22 @@ Rules:
 - "examples" is an array of exactly two example sentences in English that use the (corrected) input naturally.
 - Do not include any text outside the JSON object.`;
 
+const SENTENCE_SYSTEM_PROMPT = `You are a translation assistant inside a Thai-English flashcard app.
+The user will give you a full English sentence. Respond with strict JSON only, matching exactly this shape:
+{"thai": string}
+
+Rules:
+- "thai" is the natural, fluent Thai translation of the input sentence, written in Thai script.
+- Do not include any text outside the JSON object.`;
+
+const MODE_CONFIG = {
+  word: { systemPrompt: WORD_SYSTEM_PROMPT, isValid: isWordLookupResult },
+  sentence: {
+    systemPrompt: SENTENCE_SYSTEM_PROMPT,
+    isValid: isSentenceLookupResult,
+  },
+} as const;
+
 export async function POST(req: NextRequest) {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
@@ -27,19 +43,21 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json().catch(() => null);
-  const mode = body?.mode;
+  const mode: unknown = body?.mode;
   const text = typeof body?.text === "string" ? body.text.trim() : "";
 
   if (!text) {
     return NextResponse.json({ error: "text is required" }, { status: 400 });
   }
 
-  if (mode !== "word") {
+  if (mode !== "word" && mode !== "sentence") {
     return NextResponse.json(
       { error: `Unsupported mode: ${String(mode)}` },
       { status: 400 }
     );
   }
+
+  const { systemPrompt, isValid } = MODE_CONFIG[mode];
 
   let response: Response;
   try {
@@ -54,7 +72,7 @@ export async function POST(req: NextRequest) {
         model: OPENROUTER_MODEL,
         response_format: { type: "json_object" },
         messages: [
-          { role: "system", content: WORD_SYSTEM_PROMPT },
+          { role: "system", content: systemPrompt },
           { role: "user", content: text },
         ],
       }),
@@ -94,7 +112,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (!isWordLookupResult(parsed)) {
+  if (!isValid(parsed)) {
     return NextResponse.json(
       { error: "Model returned an unexpected response shape" },
       { status: 502 }

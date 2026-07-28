@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import type { LeverMode } from "@/app/components/Lever";
-import type { WordLookupResult } from "@/app/lib/vocab";
+import type { SentenceLookupResult, WordLookupResult } from "@/app/lib/vocab";
 
 export function useVocabLookup() {
-  const [result, setResult] = useState<WordLookupResult | null>(null);
+  const [result, setResult] = useState<
+    WordLookupResult | SentenceLookupResult | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +30,7 @@ export function useVocabLookup() {
         return;
       }
 
-      setResult(data as WordLookupResult);
+      setResult(data as WordLookupResult | SentenceLookupResult);
     } catch {
       setError("Network error. Please try again.");
       setResult(null);

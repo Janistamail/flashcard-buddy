@@ -3,6 +3,7 @@
 import { useState, type ReactNode, type SyntheticEvent } from "react";
 import Lever, { LeverMode } from "@/app/components/Lever";
 import { useVocabLookup } from "@/app/hooks/useVocabLookup";
+import { isSentenceLookupResult, isWordLookupResult } from "@/app/lib/vocab";
 
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -88,7 +89,15 @@ export default function Home() {
             </p>
           )}
 
-          {result && mode === "word" && (
+          {result && mode === "sentence" && isSentenceLookupResult(result) && (
+            <div className="flex flex-col gap-2 rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+              <p className="text-lg text-zinc-900 dark:text-zinc-50">
+                {result.thai}
+              </p>
+            </div>
+          )}
+
+          {result && mode === "word" && isWordLookupResult(result) && (
             <div className="flex flex-col gap-2 rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
               {result.didYouMean && (
                 <p className="text-sm italic text-zinc-500 dark:text-zinc-400">

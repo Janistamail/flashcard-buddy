@@ -21,3 +21,15 @@ export function isWordLookupResult(value: unknown): value is WordLookupResult {
       (typeof v.didYouMean === "string" && v.didYouMean.trim().length > 0))
   );
 }
+
+export type SentenceLookupResult = {
+  thai: string;
+};
+
+export function isSentenceLookupResult(
+  value: unknown
+): value is SentenceLookupResult {
+  if (typeof value !== "object" || value === null) return false;
+  const v = value as Record<string, unknown>;
+  return typeof v.thai === "string" && v.thai.trim().length > 0;
+}
