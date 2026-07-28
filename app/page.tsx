@@ -2,7 +2,9 @@
 
 import { useState, type ReactNode, type SyntheticEvent } from "react";
 import Lever, { LeverMode } from "@/app/components/Lever";
+import Modal from "@/app/components/Modal";
 import { useVocabLookup } from "@/app/hooks/useVocabLookup";
+import { useSaveVocab } from "@/app/hooks/useSaveVocab";
 import { isSentenceLookupResult, isWordLookupResult } from "@/app/lib/vocab";
 
 function escapeRegExp(value: string) {
@@ -28,12 +30,21 @@ export default function Home() {
   const [text, setText] = useState("");
   const [queriedText, setQueriedText] = useState("");
   const { result, error, loading, lookup, reset } = useVocabLookup();
+  const {
+    status: saveStatus,
+    error: saveError,
+    duplicate,
+    save,
+    dismissDuplicate,
+    reset: resetSave,
+  } = useSaveVocab();
 
   const handleToggle = () => {
     setMode((m) => (m === "word" ? "sentence" : "word"));
     setText("");
     setQueriedText("");
     reset();
+    resetSave();
   };
 
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
@@ -42,7 +53,18 @@ export default function Home() {
     if (!trimmed || loading) return;
 
     setQueriedText(trimmed);
+    resetSave();
     await lookup(mode, trimmed);
+  };
+
+  const handleSave = () => {
+    if (!isWordLookupResult(result) || saveStatus !== "idle") return;
+    save({
+      english: result.didYouMean ?? queriedText,
+      thai: result.thai.join(", "),
+      englishMeaning: result.englishMeaning,
+      examples: result.examples,
+    });
   };
 
   return (
@@ -115,10 +137,38 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={saveStatus !== "idle"}
+                  className="rounded-lg bg-zinc-900 px-4 py-1.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900"
+                >
+                  {saveStatus === "saving" ? "Saving…" : "Save"}
+                </button>
+                {saveStatus === "saved" && (
+                  <span className="text-sm text-green-600 dark:text-green-400">
+                    Saved!
+                  </span>
+                )}
+                {saveError && (
+                  <span
+                    className="text-sm text-red-600 dark:text-red-400"
+                    role="alert"
+                  >
+                    {saveError}
+                  </span>
+                )}
+              </div>
             </div>
           )}
         </form>
       </main>
+
+      <Modal open={duplicate} onClose={dismissDuplicate}>
+        This vocab already exists
+      </Modal>
     </div>
   );
 }

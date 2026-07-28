@@ -33,3 +33,10 @@ export function isSentenceLookupResult(
   const v = value as Record<string, unknown>;
   return typeof v.thai === "string" && v.thai.trim().length > 0;
 }
+
+export type VocabularyInput = {
+  english: string;
+  thai: string;
+  englishMeaning: string;
+  examples: string[];
+};

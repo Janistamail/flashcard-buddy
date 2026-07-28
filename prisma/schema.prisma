@@ -13,9 +13,10 @@ datasource db {
 }
 
 model Vocabulary {
-  id        String   @id @default(cuid())
-  english   String
-  thai      String
-  notes     String?
-  createdAt DateTime @default(now())
+  id             String   @id @default(cuid())
+  english        String
+  thai           String
+  englishMeaning String
+  examples       String[]
+  createdAt      DateTime @default(now())
 }
