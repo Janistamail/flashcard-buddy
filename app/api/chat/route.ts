@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const OPENROUTER_MODEL = "meta-llama/llama-3.3-70b-instruct:free";
+const OPENROUTER_MODEL = "openai/gpt-oss-20b:free";
 
 const SYSTEM_PROMPT = `You are a friendly English<->Thai translation tutor inside a flashcard app.
 When the user gives you an English word/phrase, respond with:

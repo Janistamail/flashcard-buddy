@@ -10,7 +10,11 @@
       "Bash(rmdir /Users/janista/Desktop/secret_project/flashcard-buddy/app/api/vocab/lookup)",
       "Bash(rm -f /Users/janista/Desktop/secret_project/flashcard-buddy/app/components/Modal.tsx)",
       "Bash(rm -f /Users/janista/Desktop/secret_project/flashcard-buddy/app/components/Lever.tsx)",
-      "Bash(rmdir /Users/janista/Desktop/secret_project/flashcard-buddy/app/components)"
+      "Bash(rmdir /Users/janista/Desktop/secret_project/flashcard-buddy/app/components)",
+      "Bash(npx eslint *)",
+      "Bash(curl *)",
+      "Bash(npx tsc *)",
+      "Bash(echo \"tsc exit: $?\")"
     ]
   }
 }
