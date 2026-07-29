@@ -13,6 +13,12 @@ export interface FlashcardSession {
   index: number;
 }
 
+export type FlashcardGrade = "easy" | "hard";
+
+export function isFlashcardGrade(value: unknown): value is FlashcardGrade {
+  return value === "easy" || value === "hard";
+}
+
 const globalForFlashcardSessions = globalThis as unknown as {
   flashcardSessions?: Map<string, FlashcardSession>;
 };
@@ -32,4 +38,15 @@ export function shuffle<T>(items: T[]): T[] {
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled;
+}
+
+export function getCurrentCard(session: FlashcardSession): Vocabulary | undefined {
+  return session.cards[session.index];
+}
+
+export function advanceFlashcardSession(
+  session: FlashcardSession
+): Vocabulary | undefined {
+  session.index += 1;
+  return getCurrentCard(session);
 }

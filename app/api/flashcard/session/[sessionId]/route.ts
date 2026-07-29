@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { flashcardSessions } from "@/app/lib/flashcardSession";
+import { flashcardSessions, getCurrentCard } from "@/app/lib/flashcardSession";
 
 export async function GET(
   _req: NextRequest,
@@ -12,7 +12,7 @@ export async function GET(
     return NextResponse.json({ error: "Session not found" }, { status: 404 });
   }
 
-  const current = session.cards[session.index];
+  const current = getCurrentCard(session);
 
   if (!current) {
     return NextResponse.json(

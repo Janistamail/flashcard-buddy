@@ -31,7 +31,8 @@
       "Bash(kill 35743)",
       "Bash(git status *)",
       "Bash(echo \"eslint exit: $?\")",
-      "Bash(node -e \"console.log\\(typeof crypto, typeof crypto.randomUUID\\)\")"
+      "Bash(node -e \"console.log\\(typeof crypto, typeof crypto.randomUUID\\)\")",
+      "Bash(lsof -i :3000 -sTCP:LISTEN)"
     ]
   }
 }
