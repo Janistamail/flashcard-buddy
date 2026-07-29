@@ -14,7 +14,23 @@
       "Bash(npx eslint *)",
       "Bash(curl *)",
       "Bash(npx tsc *)",
-      "Bash(echo \"tsc exit: $?\")"
+      "Bash(echo \"tsc exit: $?\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git add *)",
+      "Bash(git restore *)",
+      "Bash(git commit -m ' *)",
+      "Bash(npx prisma *)",
+      "Bash(nslookup db.wqgqaxrddhsiswjoubbu.supabase.co)",
+      "Bash(nc -zv -w5 db.wqgqaxrddhsiswjoubbu.supabase.co 5432)",
+      "Bash(kill 23367)",
+      "Bash(nohup npm run dev)",
+      "Bash(disown)",
+      "Read(//tmp/**)",
+      "Bash(jobs -l)",
+      "Bash(kill %1)",
+      "Bash(kill 35743)",
+      "Bash(git status *)",
+      "Bash(echo \"eslint exit: $?\")"
     ]
   }
 }

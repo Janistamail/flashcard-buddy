@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Vocabulary" ADD COLUMN     "easyCount" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "hardCount" INTEGER NOT NULL DEFAULT 0;

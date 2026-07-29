@@ -19,4 +19,6 @@ model Vocabulary {
   englishMeaning String
   examples       String[]
   createdAt      DateTime @default(now())
+  easyCount      Int      @default(0)
+  hardCount      Int      @default(0)
 }
