@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import victoryCup from "@/app/victory_cup.png";
 
 const CONFETTI_COLORS = [
   "#facc15",
@@ -47,8 +46,10 @@ export default function VictoryCelebration() {
         ))}
       </div>
       <Image
-        src={victoryCup}
+        src="/victory_cup.png"
         alt="Victory cup"
+        width={128}
+        height={128}
         className="victory-bounce relative z-10 h-32 w-32 object-contain"
         priority
       />

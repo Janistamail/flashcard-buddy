@@ -1,6 +1,7 @@
 "use client";
 
 import ModalShell from "@/app/components/ModalShell";
+import { Button } from "@/components/ui/button";
 
 interface ModalProps {
   open: boolean;
@@ -12,13 +13,9 @@ export default function Modal({ open, onClose, children }: ModalProps) {
   return (
     <ModalShell open={open} onClose={onClose}>
       <p className="text-zinc-900 dark:text-zinc-50">{children}</p>
-      <button
-        type="button"
-        onClick={onClose}
-        className="self-end rounded-lg bg-zinc-900 px-4 py-1.5 font-medium text-white dark:bg-zinc-50 dark:text-zinc-900"
-      >
+      <Button type="button" onClick={onClose} className="self-end">
         OK
-      </button>
+      </Button>
     </ModalShell>
   );
 }

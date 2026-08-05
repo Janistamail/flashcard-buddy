@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ModalShell from "@/app/components/ModalShell";
+import { Button } from "@/components/ui/button";
 import { useVocabCount } from "@/app/hooks/useVocabCount";
 import { useStartFlashcardSession } from "@/app/hooks/useStartFlashcardSession";
 import type { FlashcardSessionMode } from "@/app/lib/flashcardSession";
@@ -93,14 +94,14 @@ export default function SessionModal({ onClose }: SessionModalProps) {
         </p>
       )}
 
-      <button
+      <Button
         type="button"
         onClick={handleSubmit}
         disabled={!canSubmit}
-        className=" self-center rounded-lg bg-zinc-900 px-4 py-1.5 font-medium text-white disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 w-30"
+        className="w-30 self-center"
       >
         {status === "starting" ? "Starting…" : "OK"}
-      </button>
+      </Button>
     </ModalShell>
   );
 }

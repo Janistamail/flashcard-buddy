@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useFlashcardPlay } from "@/app/hooks/useFlashcardPlay";
 import VictoryCelebration from "@/app/components/VictoryCelebration";
+import { Button } from "@/components/ui/button";
 
 function FlashcardSessionView() {
   const searchParams = useSearchParams();
@@ -47,12 +48,9 @@ function FlashcardSessionView() {
         <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
           Session complete
         </p>
-        <Link
-          href="/"
-          className="rounded-lg bg-zinc-900 px-5 py-2 font-medium text-white dark:bg-zinc-50 dark:text-zinc-900"
-        >
-          Back to home
-        </Link>
+        <Button asChild>
+          <Link href="/">Back to home</Link>
+        </Button>
       </div>
     );
   }
@@ -67,22 +65,20 @@ function FlashcardSessionView() {
 
       {!revealed && (
         <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={() => grade("easy")}
-            disabled={grading}
-            className="rounded-lg bg-zinc-900 px-5 py-2 font-medium text-white disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900"
-          >
+          <Button type="button" 
+            size='lg'
+          onClick={() => grade("easy")} disabled={grading}>
             Easy
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="outline"
+            size='lg'
             onClick={() => grade("hard")}
             disabled={grading}
-            className="rounded-lg border border-zinc-300 px-5 py-2 font-medium text-zinc-900 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-50"
           >
             Hard
-          </button>
+          </Button>
         </div>
       )}
 
@@ -91,14 +87,9 @@ function FlashcardSessionView() {
           <p className="text-lg text-zinc-500 dark:text-zinc-400">
             {card.english}
           </p>
-          <button
-            type="button"
-            onClick={next}
-            disabled={advancing}
-            className="rounded-lg bg-zinc-900 px-5 py-2 font-medium text-white disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900"
-          >
+          <Button type="button" onClick={next} disabled={advancing}>
             Next
-          </button>
+          </Button>
         </>
       )}
 

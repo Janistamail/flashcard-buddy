@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ModalShell from "@/app/components/ModalShell";
+import { Button } from "@/components/ui/button";
 import { useBulkImportVocab } from "@/app/hooks/useBulkImportVocab";
 
 interface BulkImportModalProps {
@@ -89,21 +90,16 @@ export default function BulkImportModal({ open, onClose }: BulkImportModalProps)
       )}
 
       <div className="flex items-center justify-end gap-3">
-        <button
-          type="button"
-          onClick={handleClose}
-          className="rounded-lg px-4 py-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-400"
-        >
+        <Button type="button" variant="ghost" onClick={handleClose}>
           Close
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={handleSubmit}
           disabled={status === "saving" || !text.trim()}
-          className="rounded-lg bg-zinc-900 px-4 py-1.5 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900"
         >
           {status === "saving" ? "Adding…" : "Add"}
-        </button>
+        </Button>
       </div>
     </ModalShell>
   );

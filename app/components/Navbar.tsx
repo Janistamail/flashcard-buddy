@@ -1,19 +1,28 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Menu } from "lucide-react";
+import BulkImportModal from "@/app/components/BulkImportModal";
+import { Button } from "@/components/ui/button";
 
-export type NavMenuItem = {
-  label: string;
-  onSelect: () => void;
-};
-
-interface NavbarProps {
-  menuItems: NavMenuItem[];
-}
-
-export default function Navbar({ menuItems }: NavbarProps) {
+export default function Navbar() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bulkImportOpen, setBulkImportOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const menuItems = [
+    {
+      label: "Translate with me",
+      onSelect: () => router.push("/translate"),
+    },
+    {
+      label: "Bulk Import (JSON)",
+      onSelect: () => setBulkImportOpen(true),
+    },
+  ];
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -39,50 +48,59 @@ export default function Navbar({ menuItems }: NavbarProps) {
   }, [menuOpen]);
 
   return (
-    <nav className="flex w-full items-center justify-end border-b border-zinc-200 px-6 py-3 dark:border-zinc-800">
-      <div
-        ref={containerRef}
-        className="relative"
-        onMouseEnter={() => setMenuOpen(true)}
-        onMouseLeave={() => setMenuOpen(false)}
-      >
-        <button
-          type="button"
-          aria-label="Menu"
-          aria-haspopup="true"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-          className="flex flex-col gap-1.5 rounded-lg p-2 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+    <>
+      <nav className="flex w-full items-center justify-between border-b border-zinc-200 px-6 py-3 dark:border-zinc-800">
+        <Link
+          href="/"
+          className="text-lg font-semibold text-zinc-900 dark:text-zinc-50"
         >
-          <span className="h-0.5 w-6 bg-zinc-900 dark:bg-zinc-50" />
-          <span className="h-0.5 w-6 bg-zinc-900 dark:bg-zinc-50" />
-          <span className="h-0.5 w-6 bg-zinc-900 dark:bg-zinc-50" />
-        </button>
+          Flashcard Buddy
+        </Link>
 
-        {menuOpen && (
-          <div className="absolute right-0 top-full z-10 w-56 pt-1">
-            <div
-              role="menu"
-              className="rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
-            >
-              {menuItems.map((item) => (
-                <button
-                  key={item.label}
-                  role="menuitem"
-                  type="button"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    item.onSelect();
-                  }}
-                  className="block w-full px-4 py-2 text-left text-sm text-zinc-900 hover:bg-zinc-100 dark:text-zinc-50 dark:hover:bg-zinc-800"
-                >
-                  {item.label}
-                </button>
-              ))}
+        <div ref={containerRef} className="relative">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+            className="h-12 w-12 cursor-pointer"
+          >
+            <Menu className="size-7 text-gray-600" />
+          </Button>
+
+          {menuOpen && (
+            <div className="absolute right-0 top-full z-10 w-56 pt-1">
+              <div
+                role="menu"
+                className="rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
+              >
+                {menuItems.map((item) => (
+                  <Button
+                    key={item.label}
+                    role="menuitem"
+                    type="button"
+                    variant="ghost"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      item.onSelect();
+                    }}
+                    className="w-full justify-start rounded-none px-4 font-normal cursor-pointer"
+                  >
+                    {item.label}
+                  </Button>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-      </div>
-    </nav>
+          )}
+        </div>
+      </nav>
+
+      <BulkImportModal
+        open={bulkImportOpen}
+        onClose={() => setBulkImportOpen(false)}
+      />
+    </>
   );
 }
