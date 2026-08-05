@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useFlashcardPlay } from "@/app/hooks/useFlashcardPlay";
+import VictoryCelebration from "@/app/components/VictoryCelebration";
 
 function FlashcardSessionView() {
   const searchParams = useSearchParams();
@@ -42,6 +43,7 @@ function FlashcardSessionView() {
   if (complete) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center gap-6 bg-zinc-50 px-6 text-center font-sans dark:bg-black">
+        <VictoryCelebration />
         <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
           Session complete
         </p>

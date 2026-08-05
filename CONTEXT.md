@@ -15,5 +15,9 @@ Lever position where the user enters a single English word or phrase and gets ba
 Lever position where the user enters an English sentence and gets back its Thai translation only. Results are transient and never saved.
 
 **Vocabulary**:
-A saved flashcard entry: the English word, its English meaning (definition), its Thai meaning, and 2 example sentences. Only created from Word mode.
+A saved flashcard entry: the English word, its English meaning (definition), its Thai meaning, and 2 example sentences. Created from Word mode, or in batches via Bulk Import.
 _Avoid_: Word, entry, card
+
+**Bulk Import**:
+The action of saving many Vocabulary entries at once by pasting a JSON array into a modal, opened from the navbar's hamburger menu. Skips duplicates and invalid entries individually rather than rejecting the whole paste.
+_Avoid_: Bulk add, add vocab JSON, JSON import

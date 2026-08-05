@@ -1,0 +1,3 @@
+# Bulk vocab import is best-effort, not transactional
+
+Bulk Import lets a user paste a JSON array of many Vocabulary entries at once via `POST /api/vocab/bulk`, hand-authored outside the app. Hand-authored batches commonly contain a stray duplicate or a malformed entry among otherwise-valid ones. We decided the endpoint saves every valid, new entry and skips duplicates (against the DB, and within the same batch) or invalid entries individually, returning a per-item report — rather than rejecting the whole batch in a transaction if any single item fails. An all-or-nothing batch means one typo in a large paste blocks everything already correct; best-effort preserves that work and reports exactly what was skipped and why.

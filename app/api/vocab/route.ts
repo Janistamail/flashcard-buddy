@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
-import type { VocabularyInput } from "@/app/lib/vocab";
-
-function trimmedString(value: unknown): string {
-  return typeof value === "string" ? value.trim() : "";
-}
+import { parseVocabularyInput } from "@/app/lib/vocab";
 
 export async function GET() {
   const vocab = await prisma.vocabulary.findMany({
@@ -15,25 +11,14 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
-  const english = trimmedString(body?.english);
-  const thai = trimmedString(body?.thai);
-  const englishMeaning = trimmedString(body?.englishMeaning);
-  const examples = Array.isArray(body?.examples) ? body.examples : null;
+  const input = parseVocabularyInput(body);
 
-  if (
-    !english ||
-    !thai ||
-    !englishMeaning ||
-    !examples ||
-    !examples.every((ex: unknown) => typeof ex === "string")
-  ) {
+  if (!input) {
     return NextResponse.json(
       { error: "english, thai, englishMeaning, and examples are required" },
       { status: 400 }
     );
   }
-
-  const input: VocabularyInput = { english, thai, englishMeaning, examples };
 
   const existing = await prisma.vocabulary.findFirst({
     where: { english: { equals: input.english, mode: "insensitive" } },

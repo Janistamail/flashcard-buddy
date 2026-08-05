@@ -40,3 +40,29 @@ export type VocabularyInput = {
   englishMeaning: string;
   examples: string[];
 };
+
+function trimmedString(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+export function parseVocabularyInput(value: unknown): VocabularyInput | null {
+  if (typeof value !== "object" || value === null) return null;
+  const v = value as Record<string, unknown>;
+
+  const english = trimmedString(v.english);
+  const thai = trimmedString(v.thai);
+  const englishMeaning = trimmedString(v.englishMeaning);
+  const examples = Array.isArray(v.examples) ? v.examples : null;
+
+  if (
+    !english ||
+    !thai ||
+    !englishMeaning ||
+    !examples ||
+    !examples.every((ex) => typeof ex === "string")
+  ) {
+    return null;
+  }
+
+  return { english, thai, englishMeaning, examples };
+}

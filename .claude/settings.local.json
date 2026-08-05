@@ -32,7 +32,13 @@
       "Bash(git status *)",
       "Bash(echo \"eslint exit: $?\")",
       "Bash(node -e \"console.log\\(typeof crypto, typeof crypto.randomUUID\\)\")",
-      "Bash(lsof -i :3000 -sTCP:LISTEN)"
+      "Bash(lsof -i :3000 -sTCP:LISTEN)",
+      "Bash(lsof -ti:3000)",
+      "Bash(ps -p 1135 -o pid,command=)",
+      "Bash(ps -p 47090 -o pid,command=)",
+      "Bash(python3 -m json.tool)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\([v['english'] for v in d if 'zzz-test' in v['english']]\\)\")",
+      "Bash(node -e ' *)"
     ]
   }
 }

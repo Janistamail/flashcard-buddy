@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { useState, type ReactNode, type SyntheticEvent } from "react";
+import BulkImportModal from "@/app/components/BulkImportModal";
 import Lever, { LeverMode } from "@/app/components/Lever";
 import Modal from "@/app/components/Modal";
+import Navbar from "@/app/components/Navbar";
 import SessionModal from "@/app/components/SessionModal";
 import { useVocabLookup } from "@/app/hooks/useVocabLookup";
 import { useSaveVocab } from "@/app/hooks/useSaveVocab";
@@ -30,6 +32,7 @@ function highlightTerm(text: string, term: string): ReactNode {
 
 export default function Home() {
   const [sessionModalOpen, setSessionModalOpen] = useState(false);
+  const [bulkImportOpen, setBulkImportOpen] = useState(false);
   const [mode, setMode] = useState<LeverMode>("word");
   const [text, setText] = useState("");
   const [queriedText, setQueriedText] = useState("");
@@ -73,6 +76,15 @@ export default function Home() {
 
   return (
     <div className="flex flex-1 flex-col items-center bg-zinc-50 font-sans dark:bg-black">
+      <Navbar
+        menuItems={[
+          {
+            label: "Bulk Import (JSON)",
+            onSelect: () => setBulkImportOpen(true),
+          },
+        ]}
+      />
+
       <main className="flex w-full max-w-xl flex-col items-center gap-8 px-6 py-16">
         <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
           Flashcard Buddy
@@ -189,6 +201,11 @@ export default function Home() {
       <Modal open={duplicate} onClose={dismissDuplicate}>
         This vocab already exists
       </Modal>
+
+      <BulkImportModal
+        open={bulkImportOpen}
+        onClose={() => setBulkImportOpen(false)}
+      />
     </div>
   );
 }
