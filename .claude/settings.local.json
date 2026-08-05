@@ -38,7 +38,9 @@
       "Bash(ps -p 47090 -o pid,command=)",
       "Bash(python3 -m json.tool)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\([v['english'] for v in d if 'zzz-test' in v['english']]\\)\")",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(npx shadcn@latest add dialog --yes)",
+      "Bash(npx shadcn@latest add dialog)"
     ]
   }
 }

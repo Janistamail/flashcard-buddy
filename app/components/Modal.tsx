@@ -1,6 +1,12 @@
 "use client";
 
-import ModalShell from "@/app/components/ModalShell";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 interface ModalProps {
@@ -11,11 +17,18 @@ interface ModalProps {
 
 export default function Modal({ open, onClose, children }: ModalProps) {
   return (
-    <ModalShell open={open} onClose={onClose}>
-      <p className="text-zinc-900 dark:text-zinc-50">{children}</p>
-      <Button type="button" onClick={onClose} className="self-end">
-        OK
-      </Button>
-    </ModalShell>
+    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+      <DialogContent showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle className="sr-only">Notice</DialogTitle>
+        </DialogHeader>
+        <p className="text-foreground">{children}</p>
+        <DialogFooter>
+          <Button type="button" onClick={onClose}>
+            OK
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import ModalShell from "@/app/components/ModalShell";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useVocabCount } from "@/app/hooks/useVocabCount";
 import { useStartFlashcardSession } from "@/app/hooks/useStartFlashcardSession";
@@ -42,66 +47,68 @@ export default function SessionModal({ onClose }: SessionModalProps) {
   };
 
   return (
-    <ModalShell open onClose={onClose}>
-      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-        Start a flashcard session
-      </h2>
+    <Dialog open onOpenChange={(next) => !next && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Start a flashcard session</DialogTitle>
+        </DialogHeader>
 
-      <fieldset className="flex flex-col gap-2">
-        <legend className="sr-only">Card selection</legend>
-        <label className="flex items-center gap-2 text-zinc-900 dark:text-zinc-50">
+        <fieldset className="flex flex-col gap-2">
+          <legend className="sr-only">Card selection</legend>
+          <label className="flex items-center gap-2 text-foreground">
+            <input
+              type="radio"
+              name="session-mode"
+              value="latest"
+              checked={mode === "latest"}
+              onChange={() => setMode("latest")}
+            />
+            Latest
+          </label>
+          <label className="flex items-center gap-2 text-foreground">
+            <input
+              type="radio"
+              name="session-mode"
+              value="forgetTheMost"
+              checked={mode === "forgetTheMost"}
+              onChange={() => setMode("forgetTheMost")}
+            />
+            Forget the most
+          </label>
+        </fieldset>
+
+        <label className="flex flex-col gap-1 text-sm text-foreground">
+          Number of cards
           <input
-            type="radio"
-            name="session-mode"
-            value="latest"
-            checked={mode === "latest"}
-            onChange={() => setMode("latest")}
+            type="number"
+            min={1}
+            value={count}
+            onChange={(e) => setCount(e.target.value)}
+            className="rounded-lg border border-input bg-background px-3 py-1.5 text-foreground outline-none focus:border-ring"
           />
-          Latest
         </label>
-        <label className="flex items-center gap-2 text-zinc-900 dark:text-zinc-50">
-          <input
-            type="radio"
-            name="session-mode"
-            value="forgetTheMost"
-            checked={mode === "forgetTheMost"}
-            onChange={() => setMode("forgetTheMost")}
-          />
-          Forget the most
-        </label>
-      </fieldset>
 
-      <label className="flex flex-col gap-1 text-sm text-zinc-900 dark:text-zinc-50">
-        Number of cards
-        <input
-          type="number"
-          min={1}
-          value={count}
-          onChange={(e) => setCount(e.target.value)}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-        />
-      </label>
+        {noCards && (
+          <p className="text-sm text-muted-foreground">
+            No cards available yet
+          </p>
+        )}
 
-      {noCards && (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          No cards available yet
-        </p>
-      )}
+        {error && (
+          <p className="text-sm text-destructive" role="alert">
+            {error}
+          </p>
+        )}
 
-      {error && (
-        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
-          {error}
-        </p>
-      )}
-
-      <Button
-        type="button"
-        onClick={handleSubmit}
-        disabled={!canSubmit}
-        className="w-30 self-center"
-      >
-        {status === "starting" ? "Starting…" : "OK"}
-      </Button>
-    </ModalShell>
+        <Button
+          type="button"
+          onClick={handleSubmit}
+          disabled={!canSubmit}
+          className="w-30 self-center"
+        >
+          {status === "starting" ? "Starting…" : "OK"}
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 }

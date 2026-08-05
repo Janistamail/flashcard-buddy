@@ -23,19 +23,21 @@ export function useSaveVocab() {
       if (res.status === 409) {
         setDuplicate(true);
         setStatus("idle");
-        return;
+        return false;
       }
 
       if (!res.ok) {
         setError("Save failed. Please try again.");
         setStatus("idle");
-        return;
+        return false;
       }
 
       setStatus("saved");
+      return true;
     } catch {
       setError("Network error. Please try again.");
       setStatus("idle");
+      return false;
     }
   };
 
