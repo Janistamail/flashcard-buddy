@@ -5,8 +5,13 @@ import {
   isFlashcardSessionMode,
   shuffle,
 } from "@/app/lib/flashcardSession";
+import { requireUserId } from "@/app/lib/requireAuth";
 
 export async function POST(req: NextRequest) {
+  const authResult = await requireUserId();
+  if ("unauthorized" in authResult) return authResult.unauthorized;
+  const { userId } = authResult;
+
   const body = await req.json().catch(() => null);
   const mode: unknown = body?.mode;
   const count: unknown = body?.count;
@@ -31,6 +36,7 @@ export async function POST(req: NextRequest) {
       : [{ hardCount: "desc" as const }, { createdAt: "desc" as const }];
 
   const cards = await prisma.vocabulary.findMany({
+    where: { userId },
     orderBy,
     take: count,
   });
@@ -43,7 +49,7 @@ export async function POST(req: NextRequest) {
   }
 
   const sessionId = crypto.randomUUID();
-  flashcardSessions.set(sessionId, { cards: shuffle(cards), index: 0 });
+  flashcardSessions.set(sessionId, { cards: shuffle(cards), index: 0, userId });
 
   return NextResponse.json({ sessionId }, { status: 201 });
 }

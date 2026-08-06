@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   advanceFlashcardSession,
-  flashcardSessions,
+  getOwnedFlashcardSession,
 } from "@/app/lib/flashcardSession";
+import { requireUserId } from "@/app/lib/requireAuth";
 
 export async function POST(
   _req: NextRequest,
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
+  const authResult = await requireUserId();
+  if ("unauthorized" in authResult) return authResult.unauthorized;
+  const { userId } = authResult;
+
   const { sessionId } = await params;
-  const session = flashcardSessions.get(sessionId);
+  const session = getOwnedFlashcardSession(sessionId, userId);
 
   if (!session) {
     return NextResponse.json({ error: "Session not found" }, { status: 404 });

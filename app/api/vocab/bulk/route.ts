@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
 import { parseVocabularyInput, type VocabularyInput } from "@/app/lib/vocab";
+import { requireUserId } from "@/app/lib/requireAuth";
 
 export async function POST(req: NextRequest) {
+  const authResult = await requireUserId();
+  if ("unauthorized" in authResult) return authResult.unauthorized;
+  const { userId } = authResult;
+
   const body = await req.json().catch(() => null);
   const items: unknown[] | null = Array.isArray(body?.items)
     ? body.items
@@ -15,7 +20,10 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Scoped to the caller's own vocab: different users are allowed to save
+  // the same word.
   const existing = await prisma.vocabulary.findMany({
+    where: { userId },
     select: { english: true },
   });
   const seen = new Set(existing.map((v) => v.english.toLowerCase()));
@@ -44,9 +52,12 @@ export async function POST(req: NextRequest) {
   if (toCreate.length > 0) {
     // skipDuplicates guards the same race as the single-save route: the
     // findMany snapshot above can go stale if a word is inserted
-    // concurrently, and the DB's unique index (vocabulary_unique_english_ci)
+    // concurrently, and the DB's unique index (vocabulary_unique_english_ci_per_user)
     // would otherwise abort the whole batch on conflict.
-    await prisma.vocabulary.createMany({ data: toCreate, skipDuplicates: true });
+    await prisma.vocabulary.createMany({
+      data: toCreate.map((item) => ({ ...item, userId })),
+      skipDuplicates: true,
+    });
   }
 
   return NextResponse.json({

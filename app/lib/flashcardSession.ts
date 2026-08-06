@@ -11,6 +11,7 @@ export function isFlashcardSessionMode(
 export interface FlashcardSession {
   cards: Vocabulary[];
   index: number;
+  userId: string;
 }
 
 export type FlashcardGrade = "easy" | "hard";
@@ -42,6 +43,19 @@ export function shuffle<T>(items: T[]): T[] {
 
 export function getCurrentCard(session: FlashcardSession): Vocabulary | undefined {
   return session.cards[session.index];
+}
+
+// A Play Session may only be read or mutated by the userId that created it.
+// Returns undefined both when the session doesn't exist and when it belongs
+// to someone else, so callers can respond identically (404) in both cases
+// rather than confirming to an attacker that a guessed sessionId is real.
+export function getOwnedFlashcardSession(
+  sessionId: string,
+  userId: string
+): FlashcardSession | undefined {
+  const session = flashcardSessions.get(sessionId);
+  if (!session || session.userId !== userId) return undefined;
+  return session;
 }
 
 export function advanceFlashcardSession(

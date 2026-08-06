@@ -48,3 +48,6 @@ next-env.d.ts
 # editor
 .vscode/
 .idea/
+
+# teach skill workspaces (personal learning material, not project docs)
+.teach/
