@@ -14,9 +14,9 @@ export function useFlashcardPlay(sessionId: string | null) {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [complete, setComplete] = useState(false);
   const [revealed, setRevealed] = useState(false);
-  const [grading, setGrading] = useState(false);
-  const [advancing, setAdvancing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [counts, setCounts] = useState({ easy: 0, hard: 0 });
 
   useEffect(() => {
     if (!sessionId) return;
@@ -40,10 +40,14 @@ export function useFlashcardPlay(sessionId: string | null) {
     };
   }, [sessionId]);
 
-  const grade = async (value: FlashcardGrade) => {
-    if (!sessionId || !card || revealed || grading) return;
+  const reveal = () => {
+    if (card && !revealed) setRevealed(true);
+  };
 
-    setGrading(true);
+  const grade = async (value: FlashcardGrade) => {
+    if (!sessionId || !card || !revealed || submitting) return false;
+
+    setSubmitting(true);
     setActionError(null);
 
     try {
@@ -56,21 +60,26 @@ export function useFlashcardPlay(sessionId: string | null) {
       if (!res.ok) {
         const data = await res.json().catch(() => null);
         setActionError(data?.error ?? "Could not save grade. Please try again.");
-        return;
+        return false;
       }
 
-      setRevealed(true);
+      setCounts((c) => ({
+        ...c,
+        [value]: c[value] + 1,
+      }));
+      return true;
     } catch {
       setActionError("Network error. Please try again.");
+      return false;
     } finally {
-      setGrading(false);
+      setSubmitting(false);
     }
   };
 
   const next = async () => {
-    if (!sessionId || advancing) return;
+    if (!sessionId || submitting) return;
 
-    setAdvancing(true);
+    setSubmitting(true);
     setActionError(null);
 
     try {
@@ -93,7 +102,7 @@ export function useFlashcardPlay(sessionId: string | null) {
     } catch {
       setActionError("Network error. Please try again.");
     } finally {
-      setAdvancing(false);
+      setSubmitting(false);
     }
   };
 
@@ -111,11 +120,12 @@ export function useFlashcardPlay(sessionId: string | null) {
     error: missingSession ? "Missing session" : loadError,
     card,
     revealed,
+    reveal,
     complete,
     grade,
-    grading,
     next,
-    advancing,
+    submitting,
     actionError,
+    counts,
   };
 }

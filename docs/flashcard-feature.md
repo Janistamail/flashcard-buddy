@@ -3,7 +3,7 @@
 ## Summary
 
 A play button (using `lunla_paws.png`) on the home page opens a modal to configure
-a flashcard review session. The user picks how cards are selected ("Latest" or
+a Play Session. The user picks how cards are selected ("Latest" or
 "Forget the most") and how many, then is taken to a `/flashcard` page that steps
 through the selected cards one at a time, showing the English meaning, letting
 the user self-grade with Easy/Hard, then revealing the English word.
@@ -34,7 +34,7 @@ model Vocabulary {
   the home page.
 - Clicking it opens the session-configuration modal.
 
-## Session-configuration modal
+## Play Session configuration modal
 
 - Radio group with two options:
   - **Latest** (default selected)
@@ -56,8 +56,8 @@ model Vocabulary {
      many exist (no error shown).
   3. Shuffles the selected set into a fixed random order.
   4. Stores the ordered card list plus a current-index pointer in an
-     in-memory `Map`, keyed by a generated `sessionId`.
-  5. Returns `sessionId` to the client.
+     in-memory `Map`, keyed by a generated ID for the Play Session (`sessionId`).
+  5. Returns the Play Session's `sessionId` to the client.
 - The client navigates to `/flashcard?session=<sessionId>`.
 
 ## `/flashcard` page
@@ -84,5 +84,5 @@ Flow per card:
 - No ratio-based or difference-based ("hardCount - easyCount") forget ranking
   — ranking is purely `hardCount DESC`.
 - No repeats of a card within the same session.
-- No server-persisted session table — sessions live in an in-memory `Map` and
-  are not expected to survive a server restart.
+- No server-persisted Play Session table — Play Sessions live in an in-memory
+  `Map` and are not expected to survive a server restart.

@@ -42,7 +42,11 @@ export async function POST(req: NextRequest) {
   });
 
   if (toCreate.length > 0) {
-    await prisma.vocabulary.createMany({ data: toCreate });
+    // skipDuplicates guards the same race as the single-save route: the
+    // findMany snapshot above can go stale if a word is inserted
+    // concurrently, and the DB's unique index (vocabulary_unique_english_ci)
+    // would otherwise abort the whole batch on conflict.
+    await prisma.vocabulary.createMany({ data: toCreate, skipDuplicates: true });
   }
 
   return NextResponse.json({

@@ -1,0 +1,12 @@
+-- Enforce case-insensitive uniqueness on Vocabulary.english at the
+-- database level. The API only did a findFirst() check before create(),
+-- which is a check-then-insert race: two overlapping requests could both
+-- pass the check and insert duplicate words. This functional unique index
+-- closes that race regardless of app-level guards.
+--
+-- Note: this is an expression index, which Prisma's schema DSL can't
+-- represent directly, so it is not mirrored in schema.prisma. Future
+-- `prisma migrate dev` diffs won't know about it from the schema alone —
+-- if a generated migration ever includes a statement dropping
+-- "Vocabulary_english_ci_key", remove that statement before applying.
+CREATE UNIQUE INDEX "Vocabulary_english_ci_key" ON "Vocabulary" (lower("english"));
