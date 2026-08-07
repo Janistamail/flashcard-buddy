@@ -4,6 +4,10 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/app/lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // Cloud Run terminates TLS at its own proxy and forwards plain HTTP, so
+  // Auth.js can't verify the host itself. Without this it throws
+  // UntrustedHost, which the client sees as this same generic config error.
+  trustHost: true,
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
   providers: [Google],
