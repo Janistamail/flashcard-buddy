@@ -21,11 +21,9 @@ model Vocabulary {
   createdAt      DateTime @default(now())
   easyCount      Int      @default(0)
   hardCount      Int      @default(0)
-  // Nullable during the expand-contract migration: added nullable first,
-  // backfilled onto the developer's own User, then made required by a
-  // follow-up migration (see docs/adr/0002-google-login-via-authjs.md).
-  userId         String?
-  user           User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  userId         String
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // Auth.js (next-auth v5) adapter models — required shape for @auth/prisma-adapter.
