@@ -1,0 +1,55 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: flashcard-buddies-lfj
+  REGION: us-central1
+  SERVICE_NAME: flashcard-buddy
+  REPOSITORY: docker-repo
+  IMAGE_NAME: flashcard-buddy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/934106719364/locations/global/workloadIdentityPools/github-actions/providers/github
+          service_account: github-actions@flashcard-buddies-lfj.iam.gserviceaccount.com
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t us-central1-docker.pkg.dev/flashcard-buddies-lfj/docker-repo/flashcard-buddy:${GITHUB_SHA} \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push \
+            us-central1-docker.pkg.dev/flashcard-buddies-lfj/docker-repo/flashcard-buddy:${GITHUB_SHA}
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy flashcard-buddy \
+            --image=us-central1-docker.pkg.dev/flashcard-buddies-lfj/docker-repo/flashcard-buddy:${GITHUB_SHA} \
+            --region=us-central1 \
+            --platform=managed
