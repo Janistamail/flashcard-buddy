@@ -11,9 +11,17 @@ import { auth } from "@/app/lib/auth";
 // callers, and there's no session to carry a callback back to anyway.
 export const proxy = auth((req) => {
   const isLoggedIn = !!req.auth;
-  const { pathname, origin, search } = req.nextUrl;
+  const { pathname, host, search } = req.nextUrl;
   const isLoginPage = pathname === "/login";
   const isApiRoute = pathname.startsWith("/api");
+
+  // Cloud Run terminates TLS at its own proxy and forwards plain HTTP (see
+  // the same note in app/lib/auth.ts), so req.nextUrl.origin resolves to
+  // http://. Honor X-Forwarded-Proto so redirects we build here point back
+  // to https — otherwise the login redirect downgrades the browser to an
+  // insecure origin and the Secure session cookie won't come along.
+  const protocol = req.headers.get("x-forwarded-proto") ?? req.nextUrl.protocol.replace(":", "");
+  const origin = `${protocol}://${host}`;
 
   if (isLoggedIn || isLoginPage) {
     return NextResponse.next();

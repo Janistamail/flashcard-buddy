@@ -1,7 +1,7 @@
 # =========================
 # Base
 # =========================
-FROM node:22-alpine AS base
+FROM --platform=linux/amd64 node:22-alpine AS base
 
 # Activate the exact pnpm version used by the project once, for every stage
 RUN corepack enable && corepack prepare pnpm@11.17.0 --activate
