@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      "X-Title": "Flashcard Buddy",
+      "X-Title": "Lunla Flashcard",
     },
     body: JSON.stringify({
       model: OPENROUTER_MODEL,

@@ -65,9 +65,16 @@ export default function Navbar({ session }: { session: Session | null }) {
       <nav className="flex w-full items-center justify-between border-b border-zinc-200 px-6 py-3 dark:border-zinc-800">
         <Link
           href="/"
-          className="text-lg font-semibold text-zinc-900 dark:text-zinc-50"
+          className="flex items-center gap-2 text-lg font-semibold text-zinc-900 dark:text-zinc-50"
         >
-          Flashcard Buddy
+          <Image
+            src="/lunla_head.png"
+            alt="Lunla Flashcard"
+            width={32}
+            height={32}
+            className="size-8"
+          />
+          Lunla Flashcard
         </Link>
 
         <div className="flex items-center gap-3">

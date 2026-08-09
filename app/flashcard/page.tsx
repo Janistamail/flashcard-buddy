@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useFlashcardPlay } from "@/app/hooks/useFlashcardPlay";
@@ -96,22 +97,33 @@ function FlashcardSessionView() {
         <div className="flex gap-3">
           <Button
             type="button"
-            variant="outline"
-            size="lg"
-            className="border-rose-300 text-rose-600 hover:bg-rose-50 dark:border-rose-900 dark:text-rose-400 dark:hover:bg-rose-950"
+            variant="ghost"
+            className="hover:scale-110 hover:bg-transparent dark:hover:bg-transparent"
             onClick={() => cardRef.current?.swipe("hard")}
             disabled={submitting}
+            aria-label="Hard"
           >
-            Hard
+            <Image
+              src="/lunla_thums_up.png"
+              alt="Hard"
+              width={50}
+              height={50}
+            />
           </Button>
           <Button
             type="button"
-            size="lg"
-            className="bg-emerald-600 text-white hover:bg-emerald-500"
+            variant="ghost"
+            className="hover:scale-110 hover:bg-transparent dark:hover:bg-transparent"
             onClick={() => cardRef.current?.swipe("easy")}
             disabled={submitting}
+            aria-label="Easy"
           >
-            Easy
+            <Image
+              src="/lunla_thums_down.png"
+              alt="Easy"
+              width={50}
+              height={50}
+            />
           </Button>
         </div>
       ) : (
