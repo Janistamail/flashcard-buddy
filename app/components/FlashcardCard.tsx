@@ -120,7 +120,7 @@ const FlashcardCard = forwardRef<FlashcardCardHandle, FlashcardCardProps>(
           transition:
             dragging || skipTransition
               ? "none"
-              : "transform 300ms ease, opacity 300ms ease",
+              : "transform 1000ms ease, opacity 1000ms ease",
           touchAction: "pan-y",
         }}
       >
